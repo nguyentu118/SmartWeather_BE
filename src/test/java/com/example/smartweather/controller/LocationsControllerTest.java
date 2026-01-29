@@ -4,25 +4,20 @@ import com.example.smartweather.dto.LocationDTO;
 import com.example.smartweather.service.LocationsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean; // Hoặc @MockBean nếu Spring cũ hơn
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(LocationsController.class)
-@AutoConfigureMockMvc(addFilters = false)
 class LocationsControllerTest {
 
     @Autowired
@@ -37,14 +32,14 @@ class LocationsControllerTest {
     @Test
     void getAllLocations_ShouldReturnList() throws Exception {
         // Arrange
-        List<LocationDTO> list = List.of(LocationDTO.builder().cityName("Hanoi").build());
-        when(locationsService.getAllLocations()).thenReturn(list);
+        LocationDTO dto = LocationDTO.builder().cityName("Hanoi").build();
+        when(locationsService.getAllLocations()).thenReturn(List.of(dto));
 
         // Act & Assert
         mockMvc.perform(get("/api/locations")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)) // Kiểm tra accept header
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].cityName").value("Hanoi"));
     }
 
