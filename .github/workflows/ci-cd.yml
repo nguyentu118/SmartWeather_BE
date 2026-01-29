@@ -35,7 +35,7 @@ jobs:
           SERVER_PORT: 8080
           DB_URL: jdbc:mysql://localhost:3306/smart_weather_test
           DB_USERNAME: root
-          DB_PASSWORD: password
+          DB_PASSWORD: root_password
           JPA_DDL_AUTO: update
           JPA_SHOW_SQL: true
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
