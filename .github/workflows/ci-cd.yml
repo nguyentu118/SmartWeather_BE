@@ -32,7 +32,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build --no-daemon --refresh-dependencies
+        run: ./gradlew clean build --refresh-dependencies
         env:
           SERVER_PORT: 8080
           DB_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
