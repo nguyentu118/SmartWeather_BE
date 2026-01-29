@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,13 +45,19 @@ class LocationsControllerTest {
 
     @Test
     void createLocation_WithValidData_ShouldReturn200() throws Exception {
-        LocationDTO input = LocationDTO.builder().cityName("Saigon").country("Vietnam").build();
+        LocationDTO input = LocationDTO.builder()
+                .cityName("Saigon")
+                .country("Vietnam")
+                .latitude(BigDecimal.valueOf(10.8231))      // ← THÊM
+                .longitude(BigDecimal.valueOf(106.6297))    // ← THÊM
+                .build();
+
         when(locationsService.createLocation(any(LocationDTO.class))).thenReturn(input);
 
         mockMvc.perform(post("/api/locations")
-                        .contentType(MediaType.APPLICATION_JSON) // Giờ sẽ hết lỗi
-                        .content(objectMapper.writeValueAsString(input))) // Giờ sẽ hết lỗi
-                .andExpect(status().isCreated())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cityName").value("Saigon"));
     }
 }
