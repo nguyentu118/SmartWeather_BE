@@ -50,7 +50,7 @@ class LocationsControllerTest {
         mockMvc.perform(post("/api/locations")
                         .contentType(MediaType.APPLICATION_JSON) // Giờ sẽ hết lỗi
                         .content(objectMapper.writeValueAsString(input))) // Giờ sẽ hết lỗi
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.cityName").value("Saigon"));
     }
 }
