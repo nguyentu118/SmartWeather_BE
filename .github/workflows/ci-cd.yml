@@ -37,7 +37,7 @@ jobs:
           SERVER_PORT: 8080
           DB_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
           DB_USERNAME: sa
-          DB_PASSWORD: ""
+          DB_PASSWORD: ''
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           OPENUV_API_KEY: ${{ secrets.OPENUV_API_KEY }}
 
