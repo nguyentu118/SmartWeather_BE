@@ -1,9 +1,11 @@
 package com.example.smartweather.controller;
 
+import com.example.smartweather.dto.CoordinatesRequest;
 import com.example.smartweather.dto.LocationDTO;
 import com.example.smartweather.service.LocationsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/locations")
 @RequiredArgsConstructor
+@Slf4j
 public class LocationsController {
+
     private final LocationsService locationsService;
 
     @GetMapping()
@@ -30,6 +34,23 @@ public class LocationsController {
     @GetMapping("/search")
     public ResponseEntity<LocationDTO> searchByCity(@RequestParam String cityName) {
         LocationDTO location = locationsService.searchByCity(cityName);
+        return ResponseEntity.ok(location);
+    }
+
+    /**
+     * *** ENDPOINT MỚI ***
+     * Tìm hoặc tạo location từ GPS coordinates
+     *
+     * POST /api/locations/coordinates
+     * Body: { "latitude": 21.028, "longitude": 105.854 }
+     *
+     * Response: LocationDTO (existing hoặc newly created)
+     */
+    @PostMapping("/coordinates")
+    public ResponseEntity<LocationDTO> findOrCreateByCoordinates(
+            @Valid @RequestBody CoordinatesRequest request) {
+        LocationDTO location = locationsService.findOrCreateByCoordinates(request);
+
         return ResponseEntity.ok(location);
     }
 

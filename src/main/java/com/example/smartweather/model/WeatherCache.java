@@ -46,17 +46,19 @@ public class WeatherCache {
     @DecimalMax(value = "20.0", message = "UV Index không hợp lệ")
     private BigDecimal uvIndex;
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 6, scale = 2)  // ✅ SỬA: tăng từ 5 lên 6
     @DecimalMin(value = "0.0", message = "Tốc độ gió phải >= 0")
     @DecimalMax(value = "500.0", message = "Tốc độ gió không hợp lệ")
     private BigDecimal windSpeed; // km/h
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 7, scale = 2)  // ✅ SỬA: tăng từ 5 lên 7 (pressure có thể > 1013.25 hPa)
     @DecimalMin(value = "0.0", message = "Áp suất phải >= 0")
+    @DecimalMax(value = "20000.0", message = "Áp suất không hợp lệ")  // ✅ SỬA: tăng max
     private BigDecimal pressure; // hPa
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 6, scale = 2)  // ✅ SỬA: tăng từ 5 lên 6
     @DecimalMin(value = "0.0", message = "Tầm nhìn phải >= 0")
+    @DecimalMax(value = "1000.0", message = "Tầm nhìn không hợp lệ")  // ✅ SỬA: tăng max
     private BigDecimal visibility; // km
 
     @Column(nullable = false)
@@ -64,10 +66,8 @@ public class WeatherCache {
     @PastOrPresent(message = "Thời gian cập nhật không được là tương lai")
     private LocalDateTime lastUpdated;
 
-    // QUAN TRỌNG: Sửa từ @OneToMany thành @ManyToOne
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    @NotNull(message = "Location không được để trống")
     private Locations location;
 
     // Helper method để kiểm tra cache còn hợp lệ không (VD: < 30 phút)
