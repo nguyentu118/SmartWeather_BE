@@ -9,6 +9,15 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: smart_weather_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -22,6 +31,17 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
+        env:
+          SERVER_PORT: 8080
+          DB_URL: jdbc:mysql://localhost:3306/smart_weather_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+          JPA_DDL_AUTO: update
+          JPA_SHOW_SQL: true
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          OPENWEATHER_API_URL: https://api.openweathermap.org/data/2.5
+          OPENUV_API_KEY: ${{ secrets.OPENUV_API_KEY }}
+          CORS_ALLOWED_ORIGINS: "*"
         run: ./gradlew build
 
       - name: Upload Build Artifact
